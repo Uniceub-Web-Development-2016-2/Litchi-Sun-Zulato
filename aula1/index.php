@@ -1,3 +1,9 @@
 <?php
-echo "Pau que nasce torto mija fora da bacia";
-
+$var="Alguma coisa qualquer"
+if (strlen > 6) {
+echo $var;
+}
+else {
+  "Não vai dar não"
+}
+?>
