@@ -55,18 +55,17 @@ public function getParameters(){
         return $this->parameters;
 }
 
-public function toString(){
-        $string = 0;
- 	foreach($this->parameters as $parameter){
-        $string = $parameter."&";
+ public function toString(){
+		$String = "";
+		$Inc = 1;
+		foreach($this->parameters as $var) {
+			$String .= "P".$Inc."=".$var."&amp";
+			$Inc++;
+		}
+	return $this->protocol.'://'.$this->ip.'/'.$this->resource.'?'.$String;
 }
-	$url= $this->protocol."://".$this->ip."/".$this->resource."?"
-        return $url.$string
-       
 
-}
-
-$request = new Request();
+$request = new Request("get", "http", "google.com", "pesquisa", array("t1", "t2", "t3", "t4"));
 echo $request->toString();
 
 
