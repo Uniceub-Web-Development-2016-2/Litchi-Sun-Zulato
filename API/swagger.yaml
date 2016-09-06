@@ -1,0 +1,1262 @@
+swagger: "2.0"
+info:
+  version: 1.0.0
+  title: Espaço Aluno
+  description: An attempt to improve the existing tool.
+  termsOfService: http://2204355.com/
+  contact:
+    name: Litchi Sun Zulato
+    url: http://2204355.com/
+basePath: /api
+schemes:
+  - http
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+####################### LOGIN
+securityDefinitions:
+  oauth:
+    type: oauth2
+    flow: implicit
+    authorizationUrl: https://www.espacoaluno.uniceub.br
+    scopes:
+      basic: |
+       to read any and all data related to a user
+      messages: send and receive messages
+      archives: download archives
+      grades and attendance: check classes grades and attendances
+      payment methods: check payment methods
+      disciplines: check disciplines
+      schedule: check classes schedule
+      personal data: lets user change his register information
+  key:
+    type: apiKey
+    in: query
+    name: access_token
+security:
+  - oauth:
+    - messages
+    - basic
+    - archives
+    - payment methods
+    - grades and attendance
+    - disciplines
+    - schedule
+    - personal data
+  - key: []
+####################### PATHS
+paths:
+  /user{RA}:
+    parameters:
+      - $ref: '#/parameters/RA'
+    get:
+      security:
+        - key: []
+        - oauth:
+          - basic
+      tags:
+        - Users
+      description: Get user information.
+      responses:
+        '200':
+          description: The user object
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/definitions/User'
+        404:
+          description: User not found
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorModel'
+  /user{RA}/archives:
+    parameters:
+      - $ref: '#/parameters/RA'
+    get:
+      description: Returns all archives
+      operationId: returnArchives
+      produces:
+        - application/json
+        - application/xml
+        - text/xml
+        - text/html
+      parameters:
+        - in: body
+          name: ArchiveUrl
+          description: Download archive
+          required: true
+          schema:
+            $ref: "#/definitions/Archive"
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Archive'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorModel'              
+  /user{RA}/messages:
+    parameters:
+      - $ref: '#/parameters/RA'
+    post:
+      tags:
+        - Message
+      summary: Write a new message
+      operationId: writeMessage
+      consumes:
+        - application/json
+        - application/xml
+      produces:
+        - application/json
+        - application/xml
+      parameters:
+        - in: body
+          name: newMessage
+          description: Message written that needs to be sent to another user.
+          required: true
+          schema:
+            $ref: "#/definitions/Message"
+      responses:
+        "200":
+          description: Message sent
+        "405":
+          description: Invalid input
+    get:
+      description: Returns all messages
+      operationId: returnMessages
+      produces:
+        - application/json
+        - application/xml
+        - text/xml
+        - text/html
+      parameters:
+        - in: body
+          name: message
+          description: Message written
+          required: true
+          schema:
+            $ref: "#/definitions/Message"
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Message'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorModel'
+    delete:
+      tags:
+        - Message
+      summary: Deletes a message
+      operationId: deleteMessage
+      produces:
+        - application/json
+        - application/xml
+      parameters:
+        - in: body
+          name: message
+          description: Message to delete
+          required: true
+          schema:
+            $ref: "#/definitions/Message"
+      responses:
+        "404":
+          description: Message not found
+  /user{RA}/messages/professors:
+    parameters:
+      - $ref: '#/parameters/RA'
+    post:
+      tags:
+        - Message
+      summary: Write a new message to a Professor
+      operationId: writeProfessorMessage
+      consumes:
+        - application/json
+        - application/xml
+      produces:
+        - application/json
+        - application/xml
+      parameters:
+        - in: body
+          name: professorMessage
+          description: Message written that needs to be sent to a Professor.
+          required: true
+          schema:
+            $ref: "#/definitions/Message"
+      responses:
+        "200":
+          description: Message sent
+        "405":
+          description: Invalid input  
+    get:
+      description: Returns all Professors
+      operationId: returnProfessors
+      produces:
+        - application/json
+        - application/xml
+        - text/xml
+        - text/html
+      parameters:
+        - in: body
+          name: professor
+          description: Get professor's information
+          required: true
+          schema:
+            $ref: "#/definitions/Professor"
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Professor'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorModel'  
+  /user{RA}/classes:
+    parameters:
+      - $ref: '#/parameters/RA'
+    get:
+      description: Returns all classes and the students that are currently taking that class
+      operationId: returnClasses
+      produces:
+        - application/json
+        - application/xml
+        - text/xml
+        - text/html
+      parameters:
+        - in: body
+          name: class
+          description: Shows every class that student has been
+          required: true
+          schema:
+            $ref: "#/definitions/Class"
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Class'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorModel'
+  /user{RA}/professors:
+    parameters:
+      - $ref: '#/parameters/RA'
+    get:
+      description: Returns all Professor of that user
+      operationId: checkProfessors
+      produces:
+        - application/json
+        - application/xml
+        - text/xml
+        - text/html
+      parameters:
+        - in: body
+          name: professor
+          description: Show all the professors that user has had and their information
+          required: true
+          schema:
+            $ref: "#/definitions/Professor"
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Professor'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorModel'
+  /user{RA}/suggestion:
+    parameters:
+      - $ref: '#/parameters/RA'
+    post:
+      tags:
+        - Suggestion
+      summary: Write a new suggestion to the institution
+      operationId: writeSuggestion
+      consumes:
+        - application/json
+        - application/xml
+      produces:
+        - application/json
+        - application/xml
+      parameters:
+        - in: body
+          name: suggestion
+          description: A suggestion made to the institution.
+          required: true
+          schema:
+            $ref: "#/definitions/Suggestion"
+      responses:
+        "200":
+          description: Suggestion sent
+        "405":
+          description: Invalid input    
+  /user{RA}/teachingPlan:
+    parameters:
+      - $ref: '#/parameters/RA'
+    get:
+      description: Returns the teaching plan of a selected class of that user
+      operationId: returnTeachingPlan
+      produces:
+        - application/json
+        - application/xml
+        - text/xml
+        - text/html
+      parameters:
+        - in: body
+          name: teachingPlans
+          description: Available teaching plans
+          required: true
+          schema:
+            $ref: "#/definitions/TeachingPlan"
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/TeachingPlan'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorModel'  
+  /user{RA}/orientationGroup:
+    parameters:
+      - $ref: '#/parameters/RA'
+    get:
+      description: Returns all orientation groups that user is currently participating
+      operationId: returnOrientationGroup
+      produces:
+        - application/json
+        - application/xml
+        - text/xml
+        - text/html
+      parameters:
+        - in: body
+          name: orientationGroup
+          description: Current orientation groups
+          required: true
+          schema:
+            $ref: "#/definitions/OrientationGroup"
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/OrientationGroup'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorModel'
+  /user{RA}/NPJ:
+    parameters:
+      - $ref: '#/parameters/RA'
+    get:
+      description: Returns all NPJ documents related to that user
+      operationId: returnNPJ
+      produces:
+        - application/json
+        - application/xml
+        - text/xml
+        - text/html
+      parameters:
+        - in: body
+          name: NPJProcess
+          description: Current NPJ processess
+          required: true
+          schema:
+            $ref: "#/definitions/NPJ"
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/NPJ'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorModel'  
+  /user{RA}/autoService:
+    parameters:
+      - $ref: '#/parameters/RA'
+    get:
+      tags:
+        - AutoService
+      summary: Get all user requisitions
+      operationId: getUserRequisition
+      produces:
+        - application/json
+        - application/xml
+      parameters:
+        - in: body
+          name: requisition
+          description: Shows every requisition that belongs to this user
+          required: true
+          schema:
+            $ref: "#/definitions/AutoService"
+      responses:
+        "404":
+          description: Wall not found
+        "200":
+          description: successful operation
+          schema:
+            $ref: "#/definitions/AutoService"
+    post:
+      tags:
+        - Requisition
+      summary: Write a new requisition to the institution
+      operationId: createRequisition
+      consumes:
+        - application/json
+        - application/xml
+      produces:
+        - application/json
+        - application/xml
+      parameters:
+        - in: body
+          name: requisition
+          description: Create a new requisition and send it to the institution.
+          required: true
+          schema:
+            $ref: "#/definitions/AutoService"
+      responses:
+        "200":
+          description: Suggestion sent
+        "405":
+          description: Invalid input
+    put:
+      tags:
+        - AutoService
+      summary: Updated a requisition
+      description: This can only be done by the logged in user.
+      operationId: updateRequisition
+      produces:
+        - application/json
+        - application/xml
+      parameters:
+        - in: body
+          name: updatedRequisition
+          description: Updates a requisition
+          required: true
+          schema:
+            $ref: "#/definitions/AutoService"
+      responses:
+        "404":
+          description: requisition not found
+        "400":
+          description: There are no requisitions
+  /user{RA}/registration:
+    parameters:
+      - $ref: '#/parameters/RA'
+    get:
+      tags:
+        - Registration
+      summary: Get all classes that the user registered for
+      operationId: getRegistrations
+      produces:
+        - application/json
+        - application/xml
+      parameters:
+        - in: body
+          name: registration
+          description: Shows every class that the user has applied for
+          required: true
+          schema:
+            $ref: "#/definitions/Registration"
+      responses:
+        "404":
+          description: Not registered
+        "200":
+          description: successful operation
+          schema:
+            $ref: "#/definitions/Registration"
+    post:
+      tags:
+        - registration
+      summary: Register user in a new class
+      operationId: newRegistration
+      consumes:
+        - application/json
+        - application/xml
+      produces:
+        - application/json
+        - application/xml
+      parameters:
+        - in: body
+          name: registration
+          description: User applies to a new class
+          required: true
+          schema:
+            $ref: "#/definitions/Registration"
+      responses:
+        "200":
+          description: Successfully registered
+        "405":
+          description: Invalid input
+    put:
+      tags:
+        - registration
+      summary: Update user registrations
+      operationId: updateRegistrarion
+      produces:
+        - application/json
+        - application/xml
+      parameters:
+        - in: body
+          name: registration
+          description: Makes changing classes possible
+          required: true
+          schema:
+            $ref: "#/definitions/Registration"
+      responses:
+        "404":
+          description: class not found
+        "400":
+          description: There are no classes left      
+  /user{RA}/secretary:
+    parameters:
+      - $ref: '#/parameters/RA'
+    get:
+      tags:
+        - Declarations
+        - Consultations
+      summary: Get all possible declarations and consultations available to that user
+      operationId: getSecretary
+      produces:
+        - application/json
+        - application/xml
+      parameters:
+        - in: body
+          name: declarationConsultation
+          description: Shows the available declarations that user can request and all the available consultations that user can do
+          required: true
+          schema:
+            $ref: "#/definitions/DeclarationConsultation"
+      responses:
+        "404":
+          description: No declarations found/ No available consultations
+        "200":
+          description: successful operation
+          schema:
+            $ref: "#/definitions/DeclarationConsultation"  
+  /user{RA}/finances:
+    parameters:
+      - $ref: '#/parameters/RA'
+    get:
+      tags:
+        - Finances
+      summary: Get all financial related information of that user
+      operationId: getFinances
+      produces:
+        - application/json
+        - application/xml
+      parameters:
+        - in: body
+          name: finances
+          description: Shows all financial related requests a user can do
+          required: true
+          schema:
+            $ref: "#/definitions/Finances"
+      responses:
+        "404":
+          description: No actions found
+        "200":
+          description: successful operation
+          schema:
+            $ref: "#/definitions/Finances"
+  /user{RA}/finances/currentPayment:
+    parameters:
+      - $ref: '#/parameters/RA'
+    get:
+      tags:
+        - Payment
+      summary: Generate the current payment needed
+      operationId: getCurrentPayment
+      produces:
+        - application/json
+        - application/xml
+      parameters:
+        - in: body
+          name: payment
+          description: Download the current payment needed
+          required: true
+          schema:
+            $ref: "#/definitions/CurrentPayment"
+      responses:
+        "404":
+          description: No payment found
+        "200":
+          description: successful operation
+          schema:
+            $ref: "#/definitions/CurrentPayment"  
+  /user{RA}/finances/paymentAntecipation:
+    parameters:
+      - $ref: '#/parameters/RA'
+    get:
+      tags:
+        - AntecipatedPayment
+      summary: Pay a future installment of the registration
+      operationId: getPaymentAntecipation
+      produces:
+        - application/json
+        - application/xml
+      parameters:
+        - in: body
+          name: simulation
+          description: Simulate a antecipated payment
+          required: true
+          schema:
+            $ref: "#/definitions/PaymentAntecipation"
+      responses:
+        "404":
+          description: No payment found
+        "200":
+          description: successful operation
+          schema:
+            $ref: "#/definitions/PaymentAntecipation"  
+  /user{RA}/finances/debtPayment:
+    parameters:
+      - $ref: '#/parameters/RA'
+    get:
+      tags:
+        - Debt
+      summary: Pay a installment that has already expired
+      operationId: getDebt
+      produces:
+        - application/json
+        - application/xml
+      parameters:
+        - in: body
+          name: debt
+          description: Generate a billet of a previous installment
+          required: true
+          schema:
+            $ref: "#/definitions/DebtPayment"
+      responses:
+        "404":
+          description: No debt found
+        "200":
+          description: successful operation
+          schema:
+            $ref: "#/definitions/DebtPayment"  
+  /user{RA}/information:
+    parameters:
+      - $ref: '#/parameters/RA'
+    get:
+      tags:
+        - References and informatives
+      summary: Shows all the references and informatives that user has access to
+      operationId: getInformations
+      produces:
+        - application/json
+        - application/xml
+      parameters:
+        - in: body
+          name: path
+          description: redirect the user to his references and informatives
+          required: true
+          schema:
+            $ref: "#/definitions/Information"
+      responses:
+        "404":
+          description: Page not found
+        "200":
+          description: successful operation
+          schema:
+            $ref: "#/definitions/Information"  
+  /user{RA}/information/references:
+    parameters:
+      - $ref: '#/parameters/RA'
+    get:
+      tags:
+        - References
+      summary: Shows all the references that user has access to
+      operationId: getReferences
+      produces:
+        - application/json
+        - application/xml
+      parameters:
+        - in: body
+          name: link
+          description: redirect the user to the selected reference
+          required: true
+          schema:
+            $ref: "#/definitions/References"
+      responses:
+        "404":
+          description: Page not found
+        "200":
+          description: successful operation
+          schema:
+            $ref: "#/definitions/References"
+  /user{RA}/information/informatives:
+    parameters:
+      - $ref: '#/parameters/RA'
+    get:
+      tags:
+        - Informatives
+      summary: Shows all the informatives that user has access to
+      operationId: getInformatives
+      produces:
+        - application/json
+        - application/xml
+      parameters:
+        - in: body
+          name: link
+          description: redirect the user to the selected informative
+          required: true
+          schema:
+            $ref: "#/definitions/Informatives"
+      responses:
+        "404":
+          description: Page not found
+        "200":
+          description: successful operation
+          schema:
+            $ref: "#/definitions/Informatives"  
+  /user{RA}/information/informatives/calendar:
+    parameters:
+      - $ref: '#/parameters/RA'
+    get:
+      tags:
+        - Calendar
+      summary: Shows the user calendar and his events
+      operationId: getCalendar
+      produces:
+        - application/json
+        - application/xml
+      parameters:
+        - in: body
+          name: calendar
+          description: show user calendar
+          required: true
+          schema:
+            $ref: "#/definitions/Calendar"
+      responses:
+        "404":
+          description: Page not found
+        "200":
+          description: successful operation
+          schema:
+            $ref: "#/definitions/Calendar"
+  /user{RA}/information/informatives/news:   
+    parameters:
+      - $ref: '#/parameters/RA'
+    get:
+      tags:
+        - News
+      summary: Get all news posted by the institution
+      operationId: getNews
+      produces:
+        - application/json
+        - application/xml
+      parameters:
+        - in: body
+          name: news
+          description: Shows every news posted by the instituition
+          required: true
+          schema:
+            $ref: "#/definitions/News"
+      responses:
+        "404":
+          description: No news found
+        "200":
+          description: successful operation
+          schema:
+            $ref: "#/definitions/News"  
+  /user{RA}/information/informatives/events:
+    parameters:
+      - $ref: '#/parameters/RA'
+    get:
+      tags:
+        - Events
+      summary: Get all the events sponsored by the instituition
+      operationId: getEvents
+      produces:
+        - application/json
+        - application/xml
+      parameters:
+        - in: body
+          name: event
+          description: Shows every event of the instituition
+          required: true
+          schema:
+            $ref: "#/definitions/Events"
+      responses:
+        "404":
+          description: No events found
+        "200":
+          description: successful operation
+          schema:
+            $ref: "#/definitions/Events"
+    post:
+      tags:
+        - Events
+      summary: Create a new Event
+      operationId: createEvent
+      consumes:
+        - application/json
+        - application/xml
+      produces:
+        - application/json
+        - application/xml
+      parameters:
+        - in: body
+          name: event
+          description: Create a new event and post it on the calendar
+          required: true
+          schema:
+            $ref: "#/definitions/Events"
+      responses:
+        "200":
+          description: Event created
+        "405":
+          description: Invalid input
+    put:
+      tags:
+        - Events
+      summary: Updated an event
+      description: This can only be done by the logged in user.
+      operationId: updateEvent
+      produces:
+        - application/json
+        - application/xml
+      parameters:
+        - in: body
+          name: updatedEvent
+          description: Updates an event
+          required: true
+          schema:
+            $ref: "#/definitions/Events"
+      responses:
+        "404":
+          description: event not found
+        "400":
+          description: There are no events
+    delete:
+      tags:
+        - Events
+      summary: Delete event
+      description: This can only be done by the logged in user.
+      operationId: deleteEvent
+      produces:
+        - application/json
+        - application/xml
+      parameters:
+        - in: body
+          name: event
+          description: Delete a created event
+          required: true
+          schema:
+            $ref: "#/definitions/Events"
+      responses:
+        "404":
+          description: Event not found
+        "400":
+          description: Invalid event supplied      
+  /user{RA}/wall:
+    parameters:
+      - $ref: '#/parameters/RA'
+    get:
+      tags:
+        - Wall
+      summary: Get user's wall
+      description: ""
+      operationId: getUserWall
+      produces:
+        - application/json
+        - application/xml
+      parameters:
+        - in: body
+          name: wall
+          description: Current state of user wall
+          required: true
+          schema:
+            $ref: "#/definitions/Wall"
+      responses:
+        "404":
+          description: Wall not found
+        "200":
+          description: successful operation
+          schema:
+            $ref: "#/definitions/Wall"
+    post:
+      tags:
+        - Wall
+      summary: Create a new wall
+      operationId: newWall
+      consumes:
+        - application/json
+        - application/xml
+      produces:
+        - application/json
+        - application/xml
+      parameters:
+        - in: body
+          name: newWall
+          description: Create a new wall on the user profile
+          required: true
+          schema:
+            $ref: "#/definitions/Wall"
+      responses:
+        "200":
+          description: Successfully registered
+        "405":
+          description: Invalid input        
+    put:
+      tags:
+        - Wall
+      summary: Updated wall
+      description: This can only be done by the logged in user.
+      operationId: updateWall
+      produces:
+        - application/json
+        - application/xml
+      parameters:
+        - in: body
+          name: newWall
+          description: Updated wall
+          required: true
+          schema:
+            $ref: "#/definitions/Wall"
+      responses:
+        "404":
+          description: Wall not found
+        "400":
+          description: There is no wall yet
+    delete:
+      tags:
+        - Wall
+      summary: Delete wall
+      description: This can only be done by the logged in user.
+      operationId: deleteWall
+      produces:
+        - application/json
+        - application/xml
+      parameters:
+        - in: body
+          name: wall
+          description: Delete a created wall
+          required: true
+          schema:
+            $ref: "#/definitions/Wall"
+      responses:
+        "404":
+          description: User not found
+        "400":
+          description: Invalid username supplied  
+########################## PARAMETERS
+parameters:
+  RA:
+    name: RA
+    in: path
+    description: The user identifier number
+    type: number
+    required: true
+########################### DEFINITIONS    
+definitions:
+  User:
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      sex:
+        type: string
+      father_name:
+        type: string
+      mother_name:
+        type: string
+      birth_date:
+        type: string
+      birth_city:
+        type: string
+      birth_UF:
+        type: string  
+      birth_county:
+        type: string
+      nacionality:
+        type: string
+      CPF:
+        type: integer
+      adress:
+        type: string
+      CEP:
+        type: integer
+      phone:
+        type: integer
+      generalInformation:
+        type: string
+      RA:
+        type: integer
+      career:
+        type: string
+      campus:
+        type: string
+      semester:
+        type: integer
+      profilePicture:
+        type: string
+      password:
+        type: string
+  errorModel:
+    type: object
+    required:
+      - code
+      - message
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+  References:
+    type: object
+    properties:
+      library:
+        type: string
+      fineReaders:
+        type: string
+      universia:
+        type: string
+      academicPublications:
+        type: string
+      geocienceMuseum:
+        type: string
+      internationalPeriodics:
+        type: string
+  Informatives:
+    type: object
+    properties:
+      calendar:
+        $ref: "#/definitions/Calendar"
+      news:
+        $ref: "#/definitions/News"
+      events:
+        $ref: "#/definitions/Events"
+  News:
+    type: object
+    properties:
+      name:
+        type: string
+      date:
+        type: string
+      content:
+        type: string
+  Events:
+    type: object
+    properties:
+      name:
+        type: string
+      period:
+        type: string
+      state:
+        type: string
+  Calendar:
+    type: object
+    properties:
+      date:
+        type: string
+      events:
+        $ref: "#/definitions/Events"
+  Information:
+    type: object
+    properties:
+      references:
+        $ref: "#/definitions/References"
+      informatives:
+        $ref: "#/definitions/Informatives"
+  Registration:
+    type: object
+    properties:
+      classes:
+        type: object
+      schedule:
+        type: object
+      semester:
+        type: string
+      requirements:
+        type: string
+  AutoService:
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      department:
+        type: string
+      date:
+        type: string
+      situation:
+        type: string
+  Professor:
+    type: object
+    properties:
+      name:
+        type: string
+      discipline:
+        type: string
+      semester:
+        type: string
+  Message:
+    type: object
+    properties:
+      id:
+        type: string
+      created_time:
+        type: string
+      text:
+        type: string
+  NPJ:
+    type: object
+    properties:
+      name:
+        type: string
+      content:
+        type: string
+  CurrentPayment:
+    type: object
+    properties:
+      type:
+        type: string
+      period:
+        type: string
+      referenceMonth:
+        type: string
+      dueDate:
+        type: string
+      reference:
+        type: string
+      document:
+        type: object
+  PaymentAntecipation:
+    type: object
+    properties:
+      semester:
+        type: string
+      responsible:
+        $ref: "#/definitions/User"
+      discount:
+        type: integer
+      date:
+        type: string
+      credits:
+        type: integer
+  DebtPayment:
+    type: object
+    properties:
+      year:
+        type: integer
+      responsible:
+        type: object
+        items:
+          $ref: "#/definitions/User"
+  Finances:
+    type: object
+    properties:
+      currentPayment:
+        type: object
+        items:
+          $ref: "#/definitions/CurrentPayment"
+      contract:
+        type: string
+      recipt:
+        type: object
+      paymentAntecipation:
+        type: object
+        items:
+          $ref: "#/definitions/PaymentAntecipation"
+      debtPayment:
+        type: object
+        items: 
+          $ref: "#/definitions/DebtPayment"
+  Class:
+    type: object
+    properties:
+      name:
+        type: string
+      semester:
+        type: string
+      students:
+        type: string
+  OrientationGroup:
+    type: object
+    properties:
+      name:
+        type: string
+  Suggestion:
+    type: object
+    properties:
+      type:
+        type: string
+      body:
+        type: string
+  TeachingPlan:
+    type: object
+    properties:
+      className:
+        type: string
+      description:
+        type: string
+      bibliography:
+        type: string
+  DeclarationConsultation:
+    type: object
+    properties:
+      registration:
+        type: string
+      studentPass:
+        type: string
+      certificationOfApproval:
+        type: string
+      history:
+        type: string
+      classes:
+        type: string
+      schedule:
+        type: string
+      gradesNPresence:
+        type: string
+      complementaryActivities:
+        type: string
+      curriculum:
+        type: string
+      sPass:
+        type: string
+  Wall:
+    type: object
+    properties:
+      name:
+        type: string
+      type:
+        type: string
+      content:
+        type: string
+  Archive:
+    type: object
+    properties:
+      name:
+        type: string
+      url:
+        type: string
