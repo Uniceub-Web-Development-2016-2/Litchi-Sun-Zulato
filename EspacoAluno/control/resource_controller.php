@@ -1,7 +1,7 @@
 <?php
 
-include_once ('request.php');
-include_once ('db_manager.php');
+include_once ('../EspacoAluno/model/request.php');
+include_once ('../EspacoAulno/database/db_manager.php');
 
 class ResourceController
 {	
