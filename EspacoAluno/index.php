@@ -1,5 +1,5 @@
 <?php
-include('request_controller.php');
+include('../EspacoAluno/control/request_controller.php');
 
 $controller = new RequestController();
 
