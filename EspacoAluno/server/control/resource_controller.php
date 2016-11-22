@@ -7,9 +7,21 @@ class ResourceController
 {	
  	private $METHODMAP = ['GET' => 'search' , 'POST' => 'create' , 'PUT' => 'update', 'DELETE' => 'remove' ];
 	
-	public function treat_request($request) {
+		public function treat_request($request) {
+
+		
+		if($request->getMethod() == "POST" && $request->getOperation() == "login")
+		{
+			return $this->login($request);
+		}
 		return $this->{$this->METHODMAP[$request->getMethod()]}($request);
 	
+	}
+	public function login($request) {
+		$query = 'SELECT * FROM '.$request->getResource().' WHERE '.self::bodyParams($request->getBody());
+		$result = (new DBConnector())->query($query); 
+                return $result->fetchAll(PDO::FETCH_ASSOC);
+		
 	}
 
 	private function search($request) {

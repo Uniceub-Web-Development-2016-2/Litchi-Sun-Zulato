@@ -65,7 +65,7 @@ class Request{
 	public function setOperation($path) {
 		$s = explode("?", $path);
                 $r = explode("/", $s[0]);
-                $this->operation = $r[3];
+                $this->operation = $r[4];
 	}
         public function getResource(){
                 return $this->resource;
