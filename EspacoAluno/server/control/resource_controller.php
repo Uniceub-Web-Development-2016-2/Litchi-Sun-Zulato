@@ -1,7 +1,7 @@
 <?php
 
-include_once ('../EspacoAluno/model/request.php');
-include_once ('../EspacoAluno/database/db_manager.php');
+include_once ('./model/request.php');
+include_once ('./database/db_manager.php');
 
 class ResourceController
 {	
@@ -14,13 +14,8 @@ class ResourceController
 
 	private function search($request) {
 		$query = 'SELECT * FROM '.$request->getResource().' WHERE '.self::queryParams($request->getParameters());
-		return self::select($query);
-		}
-	
-	private function select($query) {
-		$conn = (new DBConnector())->query($query);
-		return $conn->fetchAll();
-		
+		$result = (new DBConnector())->query($query); 		
+		return $result->fetchAll(PDO::FETCH_ASSOC);
 	}
 	
 	private function create($request) {
@@ -65,6 +60,17 @@ class ResourceController
                 $string =  implode("','", $keys);
 		return "'".$string."'";
         }	
+	private function bodyParams($json) {
+		$criteria = "";
+                $array = json_decode($json, true);
+                foreach($array as $key => $value) {
+                                $criteria .= $key." = '".$value."' AND ";
+                 
+                }
+                return substr($criteria, 0, -5);
+	
+		
+	}
 
 	private function queryParams($params) {
 		if($params != null){		
