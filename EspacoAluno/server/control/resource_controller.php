@@ -6,17 +6,30 @@ include_once ('./database/db_manager.php');
 class ResourceController
 {	
  	private $METHODMAP = ['GET' => 'search' , 'POST' => 'create' , 'PUT' => 'update', 'DELETE' => 'remove' ];
-	
-		public function treat_request($request) {
-
-		
+ 	private $RESOURCEMAP = ['user'=>'treat_user'];
+	const RESOURCES = array('user');
+	private $USERMAP = ['GET' => 'search_user' , 'POST' => 'create_user' , 'PUT' => 'update_user', 'DELETE' => 'remove_user'];
+	/*Validating request*/
+	public function treat_request($request) {
 		if($request->getMethod() == "POST" && $request->getOperation() == "login")
 		{
 			return $this->login($request);
 		}
-		return $this->{$this->METHODMAP[$request->getMethod()]}($request);
-	
+		return $this->{$this->RESOURCEMAP[$request->getResource()]}($request);
 	}
+	function treat_user($request)
+	{
+		return $this->{$this->USERMAP[$request->getMethod()]}($request);
+	}
+	public function validated($request)
+	{
+		$resource = $request->getResource();
+		if(!in_array($resource, self::RESOURCES))
+			return false;
+		
+		return true;
+	}
+	/*Generic funcitions*/
 	public function login($request) {
 		$query = 'SELECT * FROM '.$request->getResource().' WHERE '.self::bodyParams($request->getBody());
 		$result = (new DBConnector())->query($query); 
@@ -95,8 +108,20 @@ class ResourceController
 		}
 		return 1;
 	}
-		
-	
+	/*User CRUD*/
+	private function search_user($request)
+	{
+		$query = 'SELECT login FROM user WHERE '.self::queryParams($request->getParameters());
+		$result = (new DBConnector())->query($query); 		
+		return $result->fetchAll(PDO::FETCH_ASSOC);
+	}
+		private function create_user($request)
+	{
+		$values= json_decode($request->getBody(), true);		
+		$query = "INSERT INTO user (login, password, type) VALUES ('".$values["login"]."', '".$values["password"]."', '".$values["type"]."');"
+		$result = (new DBConnector())->query($query);
+		return $result;
+	}
 	
 }
 
