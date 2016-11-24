@@ -29,7 +29,7 @@
 						RA
 					</label>
 					<div class="col-sm-5">
-						<input class="form-control" name="login" id="login" type="text" autocomplete="off" >
+						<input class="form-control" name="ra" id="ra" type="text" autocomplete="off" >
 					</div>
 				</div>
 				<div class="form-group">

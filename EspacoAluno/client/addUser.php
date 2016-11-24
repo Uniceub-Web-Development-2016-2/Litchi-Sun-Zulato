@@ -19,10 +19,10 @@
 			<form role="form" action="add.php" method="post">
 				<div class="form-group">
 					 
-					<label for="login">
-						Login
+					<label for="iduser">
+						ID
 					</label>
-					<input class="form-control" name="login" id="login" type="text">
+					<input class="form-control" name="iduser" id="iduser" type="text">
 				</div>
 				<div class="form-group">
 					 
@@ -33,10 +33,24 @@
 				</div>
 				<div class="form-group">
 					 
+					<label for="ra">
+						RA
+					</label>
+					<input class="form-control" name="ra" id="ra" type="text">
+				</div>
+				<div class="form-group">
+					 
+					<label for="active">
+						Active(1-ativo, 2-inativo)
+					</label>
+					<input class="form-control" name="active" id="active" type="text">
+				</div>
+				<div class="form-group">
+					 
 					<label for="type">
 						Tipo(1-Aluno,2-Professor,3-Administrador)
 					</label>
-					<input class="form-control" name="type" id="type" type="password">
+					<input class="form-control" name="type" id="type" type="text">
 				</div>
 				<button type="submit" class="btn btn-default">
 					Submit
