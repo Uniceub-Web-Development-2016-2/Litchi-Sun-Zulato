@@ -18,7 +18,8 @@
   <a href="addUser.php">Adicionar novo usuário</a><br>
   <a href="uppUser.php">Atualizar usuário</a>  <br>
   <a href="delUser.php">Excluir usuário</a><br>
-  <a href="src.php">Pesquisar usuário</a>
+  <a href="srcUser.php">Pesquisar usuário</a>
+  <a href="teste.php">teste</a>
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/scripts.js"></script>

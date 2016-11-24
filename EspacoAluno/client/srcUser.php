@@ -18,10 +18,10 @@
 		<div class="col-md-2">
 			<form role="form" action="src.php" method="get">
       <div class="form-group">
-          <label for="login">
+          <label for="ra">
             Login
           </label>
-          <input class="form-control" name="login" id="login" type="text">
+          <input class="form-control" name="ra" id="ra" type="text">
         </div>
 				<button type="submit" class="btn btn-default">
 					Submit

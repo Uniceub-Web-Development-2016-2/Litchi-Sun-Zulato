@@ -90,9 +90,12 @@ class ResourceController
 	private function queryParams($params) {
 		$query = "";		
 		foreach($params as $key => $value) {
-			$query .= $key.' = '.$value.' AND ';	
+			$query .= $key.' = '."'".$value."'".' AND ';	
 		}
 		$query = substr($query,0,-5);
+		if ($query == null) {
+			$query.=1;		
+		} 
 		return $query;
 	}
 	
