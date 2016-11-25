@@ -19,10 +19,10 @@ USE `EspacoAluno` ;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `EspacoAluno`.`user` (
   `iduser` INT NOT NULL,
-  `type` INT NOT NULL,
-  `password` VARCHAR(45) NOT NULL,
-  `active` INT NOT NULL,
   `ra` INT NOT NULL,
+  `password` VARCHAR(45) NOT NULL,
+  `type` INT NOT NULL,
+  `active` INT NOT NULL,
   PRIMARY KEY (`iduser`))
 ENGINE = InnoDB;
 
@@ -202,16 +202,15 @@ CREATE TABLE IF NOT EXISTS `EspacoAluno`.`registration` (
   `CEP` INT NOT NULL,
   `phone` INT NOT NULL,
   `generalinfo` VARCHAR(255) NOT NULL,
-  `RA` INT NOT NULL,
   `career` VARCHAR(255) NOT NULL,
   `campus` VARCHAR(255) NOT NULL,
   `semester` VARCHAR(50) NOT NULL,
-  `profilePicture` VARCHAR(255) NOT NULL,
-  `user_ra` INT NOT NULL,
-  PRIMARY KEY (`idregistration`, `user_ra`),
-  INDEX `fk_registration_user1_idx` (`user_ra` ASC),
+  `profilePicture` VARCHAR(255) NULL,
+  `user_iduser` INT NOT NULL,
+  PRIMARY KEY (`idregistration`, `user_iduser`),
+  INDEX `fk_registration_user1_idx` (`user_iduser` ASC),
   CONSTRAINT `fk_registration_user1`
-    FOREIGN KEY (`user_ra`)
+    FOREIGN KEY (`user_iduser`)
     REFERENCES `EspacoAluno`.`user` (`iduser`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
@@ -222,19 +221,20 @@ ENGINE = InnoDB;
 -- Table `EspacoAluno`.`user_has_major`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `EspacoAluno`.`user_has_major` (
-  `user_ra` INT NOT NULL,
+  `user_iduser` INT NOT NULL,
   `major_idmajor` INT NOT NULL,
-  PRIMARY KEY (`user_ra`, `major_idmajor`),
-  INDEX `fk_user_has_major_major1_idx` (`major_idmajor` ASC),
-  INDEX `fk_user_has_major_user1_idx` (`user_ra` ASC),
+  `major_discipline_idtable1` INT NOT NULL,
+  PRIMARY KEY (`user_iduser`, `major_idmajor`, `major_discipline_idtable1`),
+  INDEX `fk_user_has_major_major1_idx` (`major_idmajor` ASC, `major_discipline_idtable1` ASC),
+  INDEX `fk_user_has_major_user1_idx` (`user_iduser` ASC),
   CONSTRAINT `fk_user_has_major_user1`
-    FOREIGN KEY (`user_ra`)
+    FOREIGN KEY (`user_iduser`)
     REFERENCES `EspacoAluno`.`user` (`iduser`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_user_has_major_major1`
-    FOREIGN KEY (`major_idmajor`)
-    REFERENCES `EspacoAluno`.`major` (`idmajor`)
+    FOREIGN KEY (`major_idmajor` , `major_discipline_idtable1`)
+    REFERENCES `EspacoAluno`.`major` (`idmajor` , `discipline_idtable1`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
