@@ -22,7 +22,7 @@
 					<label for="iduser">
 						ID
 					</label>
-					<input class="form-control" name="iduser" id="iduser" type="text">
+					<input  class="form-control" name="iduser" id="iduser" type="text">
 				</div>
 				<div class="form-group">
 					 

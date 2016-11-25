@@ -9,10 +9,10 @@ if($_POST["ra"] != null && $_POST["password"] != null)
 	//var_dump($response);
 	$array = json_decode($response->body, true)[0];
 	if(!empty($array) && $array["ra"] == $_POST["ra"] && $array["password"] == $array["password"] && $array["type"] == 1 && $array["active"] == 1){ 
-		header("Location: http://google.com");
+		header("Location: student.php");
 }
 	if(!empty($array) && $array["ra"] == $_POST["ra"] && $array["password"] == $array["password"] && $array["type"] == 2 && $array["active"] == 1){
-		header("Location: http://facebook.com");
+		header("Location: professor.php");
 }
 	if(!empty($array) && $array["ra"] == $_POST["ra"] && $array["password"] == $array["password"] && $array["type"] == 3 && $array["active"] == 1){
 		header("Location: adm.php");
