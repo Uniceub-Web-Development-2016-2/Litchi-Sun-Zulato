@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Adicionar Usuário</title>
+    <title>Atualizar Usuário</title>
 
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
@@ -16,7 +16,7 @@
     <div class="container-fluid">
 	<div class="row">
 		<div class="col-md-12">
-			<form role="form" action="add.php" method="post">
+			<form role="form" action="del.php" method="post">
 				<div class="form-group">
 					 
 					<label for="id">
@@ -40,15 +40,13 @@
 				</div>
 				<div class="form-group">
 					 
-					<input class="form-control" name="active" id="active" type="text" value="<?php echo 1 ?>">
+					<label for="active" hidden>
+						Active(1-ativo, 2-inativo)
+					</label>
+					<input class="form-control" name="active" id="active" type="text" value="<?php echo 0 ?>">
 				</div>
 				<div class="form-group">
-					 
-					<label for="type">
-						Tipo(1-Aluno,2-Professor,3-Administrador)
-					</label>
-					<input class="form-control" name="type" id="type" type="text">
-				</div>
+
 				<button type="submit" class="btn btn-default">
 					Submit
 				</button>

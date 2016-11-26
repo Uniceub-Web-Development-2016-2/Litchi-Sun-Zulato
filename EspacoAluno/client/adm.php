@@ -18,8 +18,11 @@
   <a href="addUser.php">Adicionar novo usuário</a><br>
   <a href="uppUser.php">Atualizar usuário</a>  <br>
   <a href="delUser.php">Excluir usuário</a><br>
-  <a href="srcUser.php">Pesquisar usuário</a>
-  <a href="teste.php">teste</a>
+  <a href="srcUser.php">Pesquisar usuário</a><br>
+  <a href="addMajor.php">Adicionar novo Curso</a><br>
+  <a href="uppMajor.php">Atualizar Curso</a><br>
+  <a href="delMajor.php">Excluir Curso</a><br>
+  <a href="srcMajor.php">Pesquisar Curso</a><br>
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/scripts.js"></script>

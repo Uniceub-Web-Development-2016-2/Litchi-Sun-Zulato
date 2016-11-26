@@ -39,11 +39,8 @@
 					<input class="form-control" name="ra" id="ra" type="text">
 				</div>
 				<div class="form-group">
-					 
-					<label for="active">
-						Active(1-ativo, 2-inativo)
-					</label>
-					<input class="form-control" name="active" id="active" type="text">
+
+					<input class="form-control" name="active" id="active" type="text" value="<?php echo 1 ?>">
 				</div>
 				<div class="form-group">
 					 
