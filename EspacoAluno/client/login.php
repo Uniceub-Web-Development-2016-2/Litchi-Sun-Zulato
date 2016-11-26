@@ -3,7 +3,7 @@ include('httpful.phar');
 if($_POST["ra"] != null && $_POST["password"] != null)
 {
 	$login_array = array('ra' => $_POST["ra"], 'password' =>$_POST["password"]);
-	$url = "http://localhost/EspacoAluno/server/user/login";
+	$url = "http://40.84.50.253/EspacoAluno/server/user/login";
 	$body = json_encode($login_array);
 	$response = \Httpful\Request::post($url)->sendsJson()->body($body)->send();   
 	//var_dump($response);

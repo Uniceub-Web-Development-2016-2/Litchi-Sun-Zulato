@@ -21,7 +21,7 @@
           
         <textarea><?php
 include('httpful.phar');
-  $url = "http://localhost/EspacoAluno/server/major/search?".$_SERVER["QUERY_STRING"];
+  $url = "http://40.84.50.253/EspacoAluno/server/major/search?".$_SERVER["QUERY_STRING"];
   $response = \Httpful\Request::get($url)->send();
   echo $response->body;
 
