@@ -12,7 +12,9 @@ class ResourceController
 		if($request->getMethod() == "POST" && $request->getOperation() == "login")
 		{
 			return $this->login($request);
-		}
+		}//if($request->getOperation() == "getra"){
+			// $this->getra($request);
+		//}
 		return $this->{$this->METHODMAP[$request->getMethod()]}($request);
 	
 	}
@@ -21,7 +23,12 @@ class ResourceController
 		$result = (new DBConnector())->query($query); 
                 return $result->fetchAll(PDO::FETCH_ASSOC);
 		
-	}	
+	}
+	//private function getra($request) {
+	//	$query = 'SELECT ra FROM user';
+	//	$result = (new DBConnector())->query($query); 
+	//	return $result->fetchAll(PDO::FETCH_ASSOC);
+	//}	
 	private function search($request) {
 		$query = 'SELECT * FROM '.$request->getResource().' WHERE '.self::queryParams($request->getParameters());
 		$result = (new DBConnector())->query($query); 
