@@ -4,7 +4,7 @@ include('httpful.phar');
 	$url = "http://40.84.50.253/EspacoAluno/server/user/create_user";
 	$body = json_encode($create_array);
 	$response = \Httpful\Request::post($url)->body($body)->sendsJson()->send();   
-	header("Location: success.html");
+	header("Location: addRes.php");
 
 
 ?>

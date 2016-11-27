@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Adicionar Usuário</title>
+    <title>Buscar Usuários</title>
 
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
@@ -62,47 +62,22 @@
         <!-- Page Content -->
         
         <div class="container-fluid">
-	<div class="row">
-		<div class="col-md-12">
-			<form role="form" action="add.php" method="post">
-				<div class="form-group">
-					 
-					<label for="id">
-						ID
-					</label>
-					<input  class="form-control" name="id" id="id" type="text" required>
-				</div>
-				<div class="form-group">
-					 
-					<label for="password">
-						Senha
-					</label>
-					<input class="form-control" name="password" id="password" type="password" required>
-				</div>
-				<div class="form-group">
-					 
-					<label for="ra">
-						RA
-					</label>
-					<input class="form-control" name="ra" id="ra" type="text">
-				</div>
-				<div class="form-group">
-					 
-					<input class="form-control" name="active" id="active" type="text" value="<?php echo 1 ?>">
-				</div>
-				<div class="form-group">
-					 
-					<label for="type">
-						Tipo(1-Aluno,2-Professor,3-Administrador)
-					</label>
-					<input class="form-control" name="type" id="type" type="text" required>
-				</div>
-				<button type="submit" class="btn btn-default">
-					Submit
-				</button>
-			</form>
-		</div>
-	</div>
+    <div class="row">
+        <div class="col-md-12">
+            <form role="form" action="srcRA.php" method="post">
+                <div class="form-group">
+                     
+                    <label for="ra">
+                        RA
+                    </label>
+                    <input  class="form-control" name="ra" id="ra" type="text">
+                </div>
+                <button type="submit" class="btn btn-default">
+                    Submit
+                </button>
+            </form>
+        </div>
+    </div>
 </div>
         <!-- /#page-content-wrapper -->
 
@@ -113,3 +88,5 @@
 </body>
 
 </html>
+
+

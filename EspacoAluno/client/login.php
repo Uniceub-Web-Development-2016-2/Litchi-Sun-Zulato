@@ -18,7 +18,7 @@ if($_POST["ra"] != null && $_POST["password"] != null)
 		header("Location: adm.php");
 }
 	if($array["active"] == 0){
-		header("Location: http://dorkly.com");
+		header("Location: offUser.php");
 }
 	else{
 		echo "Erro";
